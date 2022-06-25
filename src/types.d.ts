@@ -9,14 +9,21 @@
   * 
   * inactive: not applicable here?
   * */
- export type SomeTypes = 'root' | 'scale' | 'invalid'| 'inactive';
+export type ModifierType = 'health' | 'damage';
  
  /** A basic card 
   *
   *
   * */
- export type CardDef = {
-   title: string,
-   description: string
- }
+export type CardDef = {
+  title: string,
+  description: string,
+  img?: string,
+  modifiers: CardModifier[]
+}
+
+export type CardModifier = {
+  type: ModifierType,
+  value: number
+}
  

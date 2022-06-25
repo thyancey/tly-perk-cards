@@ -27,18 +27,18 @@ export const Modal = styled.div`
   top:10%;
   border: 1rem solid white;
 `
-export const CardContainer = styled.div`
-  width:100%;
-  height:84%;
-`
 
 export const Titletext = styled.div`
   height:8%;
   width:100%;
   text-align:center;
 `
-export const Subtext = styled.div`
-  height:8%;
+export const CardContainer = styled.div`
+  width:100%;
+  height:80%;
+`
+export const DetailContainer = styled.div`
+  height:12%;
   width:100%;
   text-align:center;
 `
@@ -61,7 +61,7 @@ export function Main() {
             <Card key={idx} cardData={cardDef}/>
           )) }
         </CardContainer>
-        <Subtext><p>{'Something something extra text.. details?'}</p></Subtext>
+        <DetailContainer><p>{'Something something extra text.. details?'}</p></DetailContainer>
       </Modal>
     </Container>
   );
