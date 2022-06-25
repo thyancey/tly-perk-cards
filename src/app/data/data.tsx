@@ -43,6 +43,21 @@ export const ALL_CARDS_MAP: any = {
         value: 50.0
       }
     ]
+  },
+  "RAIN_CAT": {
+    title: 'RAIN CAT',
+    description: 'This cat is in the rain',
+    img: 'assets/cards/cat-rain.jpg',
+    modifiers:[
+      {
+        type: 'wetness',
+        value: 1
+      },
+      {
+        type: 'happyness',
+        value: -.5
+      }
+    ]
   }
 };
 
@@ -60,6 +75,11 @@ export const DECK_DATA: any = [
   {
     id: 'BLOOD_DRAGON',
     idx: 2,
+    count: 1
+  },
+  {
+    id: 'RAIN_CAT',
+    idx: 3,
     count: 1
   }
 ];

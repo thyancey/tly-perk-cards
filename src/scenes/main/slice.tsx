@@ -1,17 +1,19 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CardDef, CardStatus } from '../../types';
+import { CardDef, CardModifier, CardStatus, GameStats } from '../../types';
 import { ALL_CARDS_MAP, DECK_DATA } from '../../app/data/data';
-import { FaceRounded } from '@material-ui/icons';
+import { FaceRounded, SatelliteSharp } from '@material-ui/icons';
 
 export interface DeckState {
   deckStatus: CardStatus[];
   hand: number[];
+  gameStats: GameStats;
 }
 
 const initialState: DeckState = {
   deckStatus: [],
-  hand: []
+  hand: [],
+  gameStats: {}
 };
 
 export const deckSlice = createSlice({
@@ -22,7 +24,6 @@ export const deckSlice = createSlice({
       state.deckStatus = createDeck();
     },
     dealCards: (state) => {
-
       const curDeckStatus = state.deckStatus.map((dS: CardStatus, idx: number) => {
         if(dS.active){
           return {
@@ -47,18 +48,53 @@ export const deckSlice = createSlice({
       });
 
       state.hand = dealtIndicies;
+    },
+    augmentStats: (state, action: PayloadAction<CardModifier>) => {
+      const statType = action.payload.type;
+      if(state.gameStats[statType]){
+        state.gameStats[statType].value = state.gameStats[statType].value + action.payload.value;
+      }else{
+        state.gameStats[statType] = {
+          type: statType,
+          value: action.payload.value
+        };
+      }
+
+      state.deckStatus = state.deckStatus.map((dS: CardStatus, idx: number) => {
+        if(state.hand.includes(idx)){
+          return {
+            ...dS,
+            active: false
+          } as CardStatus;
+        }
+        return dS;
+      });
+
+
+      state.hand = [];
     }
   }
 });
 
-export const { initCards, dealCards } = deckSlice.actions;
+export const { initCards, dealCards, augmentStats } = deckSlice.actions;
 
 export const getDeckStatus = (state: RootState) => state.data.deckStatus;
 export const getHand = (state: RootState) => state.data.hand;
+export const getGameStats = (state: RootState) => state.data.gameStats;
 
 export const getCardData = (cardStatus: CardStatus) => {
   return ALL_CARDS_MAP[cardStatus.id];
 };
+
+export const selectGameStats = createSelector(
+  [getGameStats],
+  (gameStats): CardModifier[] => {
+    console.log('hello', gameStats);
+
+    // @ts-ignore
+    return Object.keys(gameStats).map(key => gameStats[key]) as CardModifier[];
+  }
+);
 
 export const selectDealtHand = createSelector(
   [getHand, getDeckStatus],

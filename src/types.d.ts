@@ -33,4 +33,7 @@ export type CardModifier = {
   type: ModifierType,
   value: number
 }
- 
+
+export type GameStats = {
+  [key: string]: CardModifier
+}

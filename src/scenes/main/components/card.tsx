@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { useAppDispatch } from '../../../app/hooks';
 import { getColor } from '../../../themes';
 import { CardDef } from '../../../types';
+import { augmentStats } from '../slice';
 import { CardDetails } from './card-details';
 
 type ContainerProps = {
@@ -120,7 +122,14 @@ type Props = {
 }
 
 export function Card({ cardData, offsetIdx, isFaceDown }: Props) {
+  const dispatch = useAppDispatch();
   const style = offsetIdx !== undefined ? { left: offsetIdx * 5, top: offsetIdx * 5 } : {};
+
+  const onCardClick = () => {
+    for(let i = 0; i < cardData.modifiers.length; i++){
+      dispatch(augmentStats(cardData.modifiers[i]));
+    }
+  }
 
   if(isFaceDown){
     return (
@@ -129,7 +138,7 @@ export function Card({ cardData, offsetIdx, isFaceDown }: Props) {
   }
 
   return (
-    <Container style={style} isTiny={offsetIdx !== undefined}>
+    <Container style={style} isTiny={offsetIdx !== undefined} onClick={onCardClick}>
       <ImageContainer>
         {cardData.img && <CardImage url={cardData.img}></CardImage>}
       </ImageContainer>

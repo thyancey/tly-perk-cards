@@ -6,6 +6,7 @@ import { dealCards, initCards, selectDealtHand, selectDiscardPile, selectDrawPil
 import { useEffect } from 'react';
 import { CardDef } from '../../types';
 import { CardPile } from './components/card-pile';
+import { GameStats } from './components/gamestats';
 
 export const Container = styled.div`
   position:absolute;
@@ -112,6 +113,7 @@ export function Main() {
 
   return (
     <Container>
+      <GameStats />
       <DrawPile>
         <CardPile cards={drawPile} isFaceDown={true} />
       </DrawPile>
