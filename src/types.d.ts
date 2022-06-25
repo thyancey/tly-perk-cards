@@ -22,6 +22,13 @@ export type CardDef = {
   modifiers: CardModifier[]
 }
 
+export type CardStatus = {
+  id: string,
+  deckIdx: number,
+  dealt: boolean,
+  active: boolean
+}
+
 export type CardModifier = {
   type: ModifierType,
   value: number

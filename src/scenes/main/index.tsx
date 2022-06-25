@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 import { Card } from './components/card';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { initCards, selectHand } from './slice';
+import { dealCards, initCards, selectDealtHand, selectDiscardPile, selectDrawPile } from './slice';
 import { useEffect } from 'react';
 import { CardDef } from '../../types';
+import { CardPile } from './components/card-pile';
 
 export const Container = styled.div`
   position:absolute;
@@ -43,26 +44,94 @@ export const DetailContainer = styled.div`
   text-align:center;
 `
 
+export const DealButton = styled.button`
+  position:absolute;
+  bottom:2rem;
+  width: 80%;
+  left: 10%;
+  background: none;
+  border: none;
+
+  padding: 1rem 2rem;
+
+  background-color: ${getColor('green')};
+  color: ${getColor('white')};
+  font-weight: bold;
+  font-size: 3rem;
+
+  border-radius: 2rem;
+
+  cursor: pointer;
+  &:hover{
+    background-color: ${getColor('blue')};
+  }
+  &:active{
+    background-color: ${getColor('purple')};
+  }
+`
+export const CardWrapper = styled.div`
+  display: inline-block;
+  width:33%;
+  height: 100%;
+  color: ${getColor('blue')};
+
+  position:relative;
+
+  padding: 1rem;
+`
+export const DrawPile = styled.div`
+  position: absolute;
+  left:0;
+  width:10rem;
+  height:20rem;
+`
+export const DiscardPile = styled.div`
+  position: absolute;
+
+  right:0;
+  width:10rem;
+  height:20rem;
+`
+
+
 export function Main() {
   const dispatch = useAppDispatch();
-  const hand = useAppSelector(selectHand);
+  const dealtHand = useAppSelector(selectDealtHand);
+  const drawPile = useAppSelector(selectDrawPile);
+  const discardPile = useAppSelector(selectDiscardPile);
+
+  console.log('discarded', discardPile)
+
   useEffect(() => {
     dispatch(initCards());
   }, []);
   
+  const onDealButton = () => {
+    dispatch(dealCards());
+  }
+
   return (
     <Container>
+      <DrawPile>
+        <CardPile cards={drawPile} isFaceDown={true} />
+      </DrawPile>
+      <DiscardPile>
+        <CardPile cards={discardPile} />
+      </DiscardPile>
       <Modal>
         <Titletext>
           <h2>{'CHOOSE SOME CARDS'}</h2>
         </Titletext>
         <CardContainer>
-          { hand.map((cardDef:CardDef, idx: number) => (
-            <Card key={idx} cardData={cardDef}/>
+          { dealtHand.map((cardDef:CardDef, idx: number) => (
+            <CardWrapper>
+              <Card key={idx} cardData={cardDef}/>
+            </CardWrapper>
           )) }
         </CardContainer>
         <DetailContainer><p>{'Something something extra text.. details?'}</p></DetailContainer>
       </Modal>
+      <DealButton onClick={onDealButton}>{'DEAL'}</DealButton>
     </Container>
   );
 }

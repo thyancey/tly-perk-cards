@@ -11,22 +11,22 @@ export const CardDescription = styled.p`
 export const ModifierContainer = styled.ul`
   padding: 1rem;
   border-radius:.5rem;
-
-  background-color:white;
   box-shadow: -.25rem -.25rem solid black;
 `
 
 export const Modifier = styled.li`
   span{
-    font-size:1.5rem;
+    font-size:1.3rem;
   }
 
   span:first-child{
     color:red;
+    font-weight: bold;
   }
 
   span:last-child{
     color:green;
+    margin-left:1rem;
   }
 `
 
