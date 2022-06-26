@@ -82,17 +82,20 @@ const shadows = {
   z2: '-0.1rem 0.1rem .25rem .1rem rgba(0,0,0,0.36)',
   z3: '-.2rem .5rem 1rem .2rem rgba(0,0,0,.36)'
 }
-type tColor = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'purple';
+type tColor = 'black' | 'grey_dark' |'grey' | 'grey_light' | 'white' | 'brown_dark' | 'brown' | 'brown_light' | 'green' | 'green_light' | 'red' | 'pink';
 const colors = {
   black: '#000000',
-  grey: '#373737',
-  grey_light: '#A39F8E',
+  grey_dark: '#222034',
+  grey: '#847e87',
+  grey_light: '#9badb7',
   white: '#fef8dd',
-  blue: '#1fb9f3',
-  green: '#51f249',
-  yellow: '#fff249',
-  red: '#F55658',
-  purple: '#6b1ff3'
+  brown_light: '#eec398',
+  brown: '#8f563b',
+  brown_dark: '#663931',
+  green: '#4b692f',
+  green_light: '#6abe30',
+  red: '#ac3232',
+  pink: '#d77bba'
 }
 
 type tBreakpoint = 'mobile_tiny' | 'mobile_medium' | 'mobile_large' | 'tablet' | 'desktop';

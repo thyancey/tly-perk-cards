@@ -27,13 +27,18 @@ export const Modal = styled.div`
   position:absolute;
   left:10%;
   top:10%;
-  border: 1rem solid white;
+  border: .5rem solid ${getColor('grey_dark')};
+  background-color: ${getColor('brown_dark')};
+
+  border-radius: 1rem;
 `
 
 export const Titletext = styled.div`
   height:8%;
   width:100%;
   text-align:center;
+
+  color: ${getColor('brown_light')}
 `
 export const CardContainer = styled.div`
   width:100%;
@@ -56,18 +61,20 @@ export const DealButton = styled.button`
   padding: 1rem 2rem;
 
   background-color: ${getColor('green')};
-  color: ${getColor('white')};
+  color: ${getColor('brown_light')};
+  border: .5rem solid ${getColor('grey_dark')};
   font-weight: bold;
   font-size: 3rem;
 
-  border-radius: 2rem;
+  border-radius: 1rem;
 
   cursor: pointer;
   &:hover{
-    background-color: ${getColor('blue')};
+    background-color: ${getColor('green_light')};
+    color: ${getColor('brown_dark')};
   }
   &:active{
-    background-color: ${getColor('purple')};
+    background-color: ${getColor('green')};
   }
 `
 export const CardWrapper = styled.div`

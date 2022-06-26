@@ -111,7 +111,7 @@ type Props = {
 
 export function Card({ cardData, offsetIdx }: Props) {
   const dispatch = useAppDispatch();
-  const style = offsetIdx !== undefined ? { left: offsetIdx * 5, top: offsetIdx * 5 } : {};
+  const style = offsetIdx !== undefined ? { left: offsetIdx * .7, top: offsetIdx * 1 } : {};
 
   const onCardClick = () => {
     for(let i = 0; i < cardData.modifiers.length; i++){

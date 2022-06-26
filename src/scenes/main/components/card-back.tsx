@@ -9,9 +9,9 @@ export const FaceDownCard = styled.div`
   top:50%;
   /* cursor: pointer; */
 
-  background-color: ${getColor('blue')};
+  background-color: ${getColor('grey_light')};
   border-radius: 2rem;
-  border: .5rem solid ${getColor('grey')};
+  border: .5rem solid ${getColor('grey_dark')};
 
   transform-origin: top;
   transform: scale(.5, .5) translate(-50%, -50%);
@@ -22,7 +22,7 @@ type Props = {
 }
 
 export function CardBack({ offsetIdx }: Props) {
-  const style = offsetIdx !== undefined ? { left: offsetIdx * 5, top: offsetIdx * 5 } : {};
+  const style = offsetIdx !== undefined ? { left: offsetIdx * .7, top: offsetIdx * 1 } : {};
 
   return (
     <FaceDownCard style={style} />

@@ -4,14 +4,6 @@ import { Main } from './scenes/main';
 import { HashRouter, Route, Routes, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const GroupContainer = styled.div`
-  background-color: ${getColor('blue')};
-  border: 1rem solid ${getColor('white')};
-  border-radius: 5rem;
-  margin: 3rem;
-  padding: 2rem 3.3rem;
-`;
-
 export const ScHeader = styled.div`
   position:fixed;
   top:0;
@@ -37,7 +29,7 @@ export const ScHeader = styled.div`
     margin:1.4rem 1.8rem;
     transition: color .5s ease-in;
     &:hover{
-      color: ${getColor('yellow')};
+      color: ${getColor('pink')};
       transition: color .2s ease-out;
     }
   }

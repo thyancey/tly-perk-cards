@@ -35,11 +35,13 @@ export const deckSlice = createSlice({
 
       const dealtIndicies = drawCardIndicies(curDeckStatus);
 
+      const now = new Date().getTime();
       state.deckStatus = curDeckStatus.map((dS: CardStatus, idx: number) => {
         if(dealtIndicies.includes(idx)){
           return {
             ...dS,
             dealt: true,
+            dealtAt: now + idx,
             active: true
           } as CardStatus;
         }
@@ -65,6 +67,7 @@ export const deckSlice = createSlice({
         } as CardValueStat;
       }
 
+      // discard those cards now.
       state.deckStatus = state.deckStatus.map((dS: CardStatus, idx: number) => {
         if(state.hand.includes(idx)){
           return {
@@ -120,9 +123,10 @@ export const selectDrawPile = createSelector(
 export const selectDiscardPile = createSelector(
   [getDeckStatus],
   (deckStatus): CardDef[] => {
-    return deckStatus.filter(d => (d.dealt && !d.active)).map(cS => {
-      return getCardData(cS);
-    });
+    return deckStatus
+      .filter(d => (d.dealt && !d.active))
+      .sort((a, b) => (a.dealtAt > b.dealtAt) ? 1 : -1)
+      .map(cS => getCardData(cS));
   }
 );
 
@@ -153,6 +157,7 @@ export const createDeck = () => {
           id: cardInfo.id,
           deckIdx: allCards.length,
           dealt: false,
+          dealtAt: 0,
           active: false
         } as CardStatus);
       }

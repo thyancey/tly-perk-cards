@@ -32,6 +32,7 @@ export type CardStatus = {
   id: string;
   deckIdx: number;
   dealt: boolean;
+  dealtAt: number; 
   active: boolean;
 }
 
