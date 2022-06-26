@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useAppDispatch } from '../../../app/hooks';
 import { getColor } from '../../../themes';
 import { CardDef } from '../../../types';
-import { augmentStats } from '../slice';
 import { CardDetails } from './card-details';
 
 const CARD_WIDTH = '24rem';
@@ -103,24 +100,25 @@ export const FrameBg = styled.div<CardImageProps>`
   background-size:cover;
 `
 
-type Props = {
-  cardData: CardDef,
-  offsetIdx?: number,
-  isFaceDown?: boolean
+interface Props {
+  cardIdx: number;
+  cardData: CardDef;
+  offsetIdx?: number;
+  isFaceDown?: boolean;
+  onCardSelected?: Function;
 }
 
-export function Card({ cardData, offsetIdx }: Props) {
-  const dispatch = useAppDispatch();
-  const style = offsetIdx !== undefined ? { left: offsetIdx * .7, top: offsetIdx * 1 } : {};
+export function Card({ cardIdx, cardData, onCardSelected, offsetIdx }: Props) {
+  const style = offsetIdx !== undefined ? { left: offsetIdx * 2, top: offsetIdx * 4 } : {};
 
-  const onCardClick = () => {
-    for(let i = 0; i < cardData.modifiers.length; i++){
-      dispatch(augmentStats(cardData.modifiers[i]));
+  const onClick = () => {
+    if(onCardSelected){
+      onCardSelected(cardIdx);
     }
   }
 
   return (
-    <Container style={style} isTiny={offsetIdx !== undefined} onClick={onCardClick}>
+    <Container style={style} isTiny={offsetIdx !== undefined} onClick={onClick}>
       <FrameOverlay url={cardData.frame.overlayImg}/>
       <ImageContainer>
         {cardData.img && <CardImage url={cardData.img}></CardImage>}

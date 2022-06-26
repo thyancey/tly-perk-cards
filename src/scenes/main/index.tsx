@@ -2,11 +2,12 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 import { Card } from './components/card';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { dealCards, initCards, selectDealtHand, selectDiscardPile, selectDrawPile } from './slice';
-import { useEffect } from 'react';
+import { augmentStats, chooseCard, dealCards, initCards, selectDealtHand, selectDiscardPile, selectDrawPile } from './slice';
+import { useEffect, useState } from 'react';
 import { CardDef } from '../../types';
 import { CardPile } from './components/card-pile';
 import { GameStats } from './components/gamestats';
+import { LaneZones } from './components/lanezones';
 
 export const Container = styled.div`
   position:absolute;
@@ -34,7 +35,7 @@ export const Modal = styled.div`
 `
 
 export const Titletext = styled.div`
-  height:8%;
+  height:5%;
   width:100%;
   text-align:center;
 
@@ -42,10 +43,15 @@ export const Titletext = styled.div`
 `
 export const CardContainer = styled.div`
   width:100%;
-  height:80%;
+  height:60%;
 `
 export const DetailContainer = styled.div`
-  height:12%;
+  height:5%;
+  width:100%;
+  text-align:center;
+`
+export const LaneContainer = styled.div`
+  height:30%;
   width:100%;
   text-align:center;
 `
@@ -91,21 +97,25 @@ export const DrawPile = styled.div`
   left:0;
   width:10rem;
   height:20rem;
+  z-index:1;
 `
 export const DiscardPile = styled.div`
   position: absolute;
 
-  right:0;
+  right:5rem;
   width:10rem;
   height:20rem;
+  z-index:1;
 `
 
 
 export function Main() {
   const dispatch = useAppDispatch();
+  const [ heldCardIdx, setHeldCardIdx ] = useState(-1);
   const dealtHand = useAppSelector(selectDealtHand);
   const drawPile = useAppSelector(selectDrawPile);
   const discardPile = useAppSelector(selectDiscardPile);
+
 
   useEffect(() => {
     dispatch(initCards());
@@ -113,6 +123,25 @@ export function Main() {
   
   const onDealButton = () => {
     dispatch(dealCards());
+  }
+
+  const onCardSelected = (cardIdx: number) => {
+    setHeldCardIdx(cardIdx);
+  }
+
+  const onLaneSelected = (laneId: number) => {
+    console.log('selectedLane', laneId)
+    setHeldCardIdx(-1);
+    if(heldCardIdx > -1){
+      const heldCard = dealtHand[heldCardIdx];
+      for(let i = 0; i < heldCard.modifiers.length; i++){
+        dispatch(augmentStats(heldCard.modifiers[i]));
+        dispatch(chooseCard({
+          handIdx: heldCard.deckIdx, 
+          laneId: laneId
+        }));
+      }
+    }
   }
 
   return (
@@ -131,11 +160,16 @@ export function Main() {
         <CardContainer>
           { dealtHand.map((cardDef:CardDef, idx: number) => (
             <CardWrapper key={idx}>
-              <Card cardData={cardDef}/>
+              <Card cardIdx={idx} cardData={cardDef} onCardSelected={onCardSelected} />
             </CardWrapper>
           )) }
         </CardContainer>
-        <DetailContainer><p>{'Something something extra text.. details?'}</p></DetailContainer>
+        <DetailContainer><p>{
+          heldCardIdx > -1 ? 'SELECT A LANE' : ''
+        }</p></DetailContainer>
+        <LaneContainer>
+          <LaneZones selectionActive={heldCardIdx > -1} onLaneSelected={onLaneSelected} />
+        </LaneContainer>
       </Modal>
       <DealButton onClick={onDealButton}>{'DEAL'}</DealButton>
     </Container>

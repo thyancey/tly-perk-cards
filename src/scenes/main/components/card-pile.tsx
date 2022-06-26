@@ -11,6 +11,7 @@ export const Container = styled.div`
 type Props = {
   cards: CardDef[];
   isFaceDown?: boolean;
+  stackType?: string;
 }
 
 export function CardPile({ cards, isFaceDown }: Props) {
@@ -21,7 +22,7 @@ export function CardPile({ cards, isFaceDown }: Props) {
           return isFaceDown ? (
             <CardBack key={idx} offsetIdx={idx} />
           ) : (
-            <Card key={idx} offsetIdx={idx} cardData={cardDef} />
+            <Card key={idx} cardIdx={-1} offsetIdx={idx} cardData={cardDef} />
           );
         })
       }

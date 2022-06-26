@@ -26,6 +26,7 @@ export type CardDef = {
   img?: string;
   frame: CardFrame;
   modifiers: CardModifier[];
+  deckIdx?: number;
 }
 
 export type CardStatus = {
@@ -34,6 +35,7 @@ export type CardStatus = {
   dealt: boolean;
   dealtAt: number; 
   active: boolean;
+  lane?: number;
 }
 
 export type ModifierType = 'add' | 'boolean';

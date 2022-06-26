@@ -66,13 +66,19 @@ export const deckSlice = createSlice({
           value: ((state.gameStats[effect.stat] as CardValueStat)?.value || 0) + effect.value
         } as CardValueStat;
       }
-
+    },
+    chooseCard: (state, action: PayloadAction<any>) => {
+      const chosenIdx = action.payload.handIdx;
+      const laneId = action.payload.laneId;
       // discard those cards now.
+      console.log('put away cards', state.hand.map(h => h))
       state.deckStatus = state.deckStatus.map((dS: CardStatus, idx: number) => {
         if(state.hand.includes(idx)){
+          console.log("put it away ", idx, chosenIdx)
           return {
             ...dS,
-            active: false
+            active: false,
+            lane: idx === chosenIdx ? laneId : dS.lane
           } as CardStatus;
         }
         return dS;
@@ -84,14 +90,17 @@ export const deckSlice = createSlice({
   }
 });
 
-export const { initCards, dealCards, augmentStats } = deckSlice.actions;
+export const { initCards, dealCards, augmentStats, chooseCard } = deckSlice.actions;
 
 export const getDeckStatus = (state: RootState) => state.data.deckStatus;
 export const getHand = (state: RootState) => state.data.hand;
 export const getGameStats = (state: RootState) => state.data.gameStats;
 
-export const getCardData = (cardStatus: CardStatus) => {
-  return ALL_CARDS_MAP[cardStatus.id];
+export const getCardData = (cardStatus: CardStatus, deckIdx: number) => {
+  return { 
+    ...ALL_CARDS_MAP[cardStatus.id],
+    deckIdx: deckIdx
+  };
 };
 
 export const selectGameStats = createSelector(
@@ -106,7 +115,7 @@ export const selectDealtHand = createSelector(
   (hand, deckStatus): CardDef[] => {
 
     return hand.filter(h => h !== -1).map(h => {
-      return getCardData(deckStatus[h]);
+      return getCardData(deckStatus[h], h);
     });
   }
 );
@@ -114,8 +123,8 @@ export const selectDealtHand = createSelector(
 export const selectDrawPile = createSelector(
   [getDeckStatus],
   (deckStatus): CardDef[] => {
-    return deckStatus.filter(d => !d.dealt).map(cS => {
-      return getCardData(cS);
+    return deckStatus.filter(d => !d.dealt).map((cS, idx) => {
+      return getCardData(cS, idx);
     });
   }
 );
@@ -124,9 +133,24 @@ export const selectDiscardPile = createSelector(
   [getDeckStatus],
   (deckStatus): CardDef[] => {
     return deckStatus
-      .filter(d => (d.dealt && !d.active))
+      .filter(d => (d.dealt && !d.active && d.lane === 0))
       .sort((a, b) => (a.dealtAt > b.dealtAt) ? 1 : -1)
-      .map(cS => getCardData(cS));
+      .map((cS, idx) => getCardData(cS, idx));
+  }
+);
+
+export const selectLaneCards = createSelector(
+  [getDeckStatus],
+  (deckStatus): CardDef[][] => {
+    let laneCards = [];
+
+    for(let l = 1; l <= 3; l++){
+      laneCards[l] = deckStatus
+        .filter(d => (d.lane === l))
+        .sort((a, b) => (a.dealtAt > b.dealtAt) ? 1 : -1)
+        .map((cS, idx) => getCardData(cS, idx));
+    }
+    return laneCards;
   }
 );
 
@@ -158,7 +182,8 @@ export const createDeck = () => {
           deckIdx: allCards.length,
           dealt: false,
           dealtAt: 0,
-          active: false
+          active: false,
+          lane: 0
         } as CardStatus);
       }
     }
