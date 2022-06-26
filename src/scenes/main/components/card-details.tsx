@@ -3,9 +3,12 @@ import { getColor } from '../../../themes';
 import { CardModifier } from '../../../types';
 
 export const Container = styled.div`
+  padding: 4rem 2rem;
 `
 
 export const CardDescription = styled.p`
+  color: ${getColor('black')};
+  text-align:center;
 `
 
 export const ModifierContainer = styled.ul`
@@ -36,19 +39,21 @@ type Props = {
 }
 
 export function CardDetails({ description, modifiers }: Props) {
+  const showModifier = false;
+
   return (
     <Container>
       <CardDescription>{description}</CardDescription>
-      <ModifierContainer>
+      {showModifier && (<ModifierContainer>
         {modifiers.map((m, i) => (
-          <Modifier key={m.type}>
+          <Modifier key={m.effect.stat}>
             <div>
-              <span>{`${m.type}:`}</span>
-              <span>{m.value}</span>
+              <span>{`${m.effect.stat}:`}</span>
+              <span>{m.effect.value}</span>
             </div>
           </Modifier>
         ))}
-      </ModifierContainer>
+      </ModifierContainer>)}
     </Container>
   );
 }

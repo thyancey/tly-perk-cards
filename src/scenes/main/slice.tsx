@@ -1,8 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CardDef, CardModifier, CardStatus, GameStats } from '../../types';
+import { CardBooleanStat, CardDef, CardModifier, CardStatus, CardValueStat, GameStats } from '../../types';
 import { ALL_CARDS_MAP, DECK_DATA } from '../../app/data/data';
-import { FaceRounded, SatelliteSharp } from '@material-ui/icons';
 
 export interface DeckState {
   deckStatus: CardStatus[];
@@ -50,14 +49,20 @@ export const deckSlice = createSlice({
       state.hand = dealtIndicies;
     },
     augmentStats: (state, action: PayloadAction<CardModifier>) => {
-      const statType = action.payload.type;
-      if(state.gameStats[statType]){
-        state.gameStats[statType].value = state.gameStats[statType].value + action.payload.value;
-      }else{
-        state.gameStats[statType] = {
-          type: statType,
-          value: action.payload.value
-        };
+      if(action.payload.type === 'boolean'){
+        const effect = action.payload.effect as CardBooleanStat;
+        state.gameStats[effect.stat] = {
+          type: 'boolean',
+          stat: effect.stat,
+          value: effect.value
+        } as CardBooleanStat;
+      }else if(action.payload.type === 'add'){
+        const effect = action.payload.effect as CardValueStat;
+        state.gameStats[effect.stat] = {
+          type: 'value',
+          stat: effect.stat,
+          value: ((state.gameStats[effect.stat] as CardValueStat)?.value || 0) + effect.value
+        } as CardValueStat;
       }
 
       state.deckStatus = state.deckStatus.map((dS: CardStatus, idx: number) => {
@@ -88,11 +93,8 @@ export const getCardData = (cardStatus: CardStatus) => {
 
 export const selectGameStats = createSelector(
   [getGameStats],
-  (gameStats): CardModifier[] => {
-    console.log('hello', gameStats);
-
-    // @ts-ignore
-    return Object.keys(gameStats).map(key => gameStats[key]) as CardModifier[];
+  (gameStats): (CardBooleanStat| CardValueStat)[] => {
+    return Object.keys(gameStats).map(key => gameStats[key]) as (CardBooleanStat| CardValueStat)[];
   }
 );
 

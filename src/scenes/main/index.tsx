@@ -74,7 +74,6 @@ export const CardWrapper = styled.div`
   display: inline-block;
   width:33%;
   height: 100%;
-  color: ${getColor('blue')};
 
   position:relative;
 
@@ -101,8 +100,6 @@ export function Main() {
   const drawPile = useAppSelector(selectDrawPile);
   const discardPile = useAppSelector(selectDiscardPile);
 
-  console.log('discarded', discardPile)
-
   useEffect(() => {
     dispatch(initCards());
   }, []);
@@ -126,8 +123,8 @@ export function Main() {
         </Titletext>
         <CardContainer>
           { dealtHand.map((cardDef:CardDef, idx: number) => (
-            <CardWrapper>
-              <Card key={idx} cardData={cardDef}/>
+            <CardWrapper key={idx}>
+              <Card cardData={cardDef}/>
             </CardWrapper>
           )) }
         </CardContainer>

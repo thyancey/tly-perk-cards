@@ -1,61 +1,145 @@
 export const ALL_CARDS_MAP: any = {
-  "DORITO_SNAKE": {
-    title: 'CURSED DORITOS',
-    description: 'A snake with doritos',
-    img: 'assets/cards/alien-doritos.jpg',
+  "RACCOON_BITE": {
+    title: 'CURSED MASK',
+    description: 'Raccoon bites in this lane do +2 damage.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents1.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
     modifiers:[
       {
-        type: 'health',
-        value: 1.2
-      },
-      {
-        type: 'damage',
-        value: -1.3
+        type: 'add',
+        effect:{
+          stat: 'biteDamage',
+          value: 2
+        }
       }
     ]
   },
-  "SPACE_BANANA": {
-    title: 'SPACE BANANA',
-    description: `Bananas don't rot in space`,
-    img: 'assets/cards/banana-astro.jpg',
+  "RACCOON_LOVE": {
+    title: 'RACCOON LOVE',
+    description: 'Raccoons in this lane stay tame for 1 second longer.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents2.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
     modifiers:[
       {
-        type: 'health',
-        value: 1.1
-      },
-      {
-        type: 'damage',
-        value: -1.4
+        type: 'add',
+        effect:{
+          stat: 'loveDuration',
+          value: 1
+        }
       }
     ]
   },
-  "BLOOD_DRAGON": {
-    title: 'ANCIENT SLAYER',
-    description: 'Dragons love blood',
-    img: 'assets/cards/dragon.jpg',
+  "RACCOON_JUMP": {
+    title: 'RACCOON LOVE',
+    description: 'Raccoons in this lane can hop.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents3.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
     modifiers:[
       {
-        type: 'health',
-        value: 3.1
-      },
-      {
-        type: 'damage',
-        value: 50.0
+        type: 'boolean',
+        effect:{
+          stat: 'canJump',
+          value: true
+        }
       }
     ]
   },
-  "RAIN_CAT": {
-    title: 'RAIN CAT',
-    description: 'This cat is in the rain',
-    img: 'assets/cards/cat-rain.jpg',
+  "RACCOON_CORPSE_BUFFET": {
+    title: 'ROTTING BUFFET',
+    description: 'Raccoons corpses in this lane act as food bowls.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents4.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
     modifiers:[
       {
-        type: 'wetness',
-        value: 1
-      },
+        type: 'boolean',
+        effect:{
+          stat: 'corpseBuffet',
+          value: true
+        }
+      }
+    ]
+  },
+  "RACCOON_FEED": {
+    title: 'CHOW DOWN',
+    description: 'Raccoons in this lane eat 20% faster.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents5.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
+    modifiers:[
       {
-        type: 'happyness',
-        value: -.5
+        type: 'add',
+        effect:{
+          stat: 'feedSpeed',
+          value: .2
+        }
+      }
+    ]
+  },
+  "RACCOON_SPAWNRATE": {
+    title: 'CROWDED NURSERY',
+    description: '30% more raccoons in this lane.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents6.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
+    modifiers:[
+      {
+        type: 'add',
+        effect:{
+          stat: 'spawnRate',
+          value: .3
+        }
+      }
+    ]
+  },
+  "REDRACCOON_SPAWN": {
+    title: 'RED RACCOONS',
+    description: 'Tanukis spawn in this lane.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents7.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
+    modifiers:[
+      {
+        type: 'boolean',
+        effect:{
+          stat: 'feedSpeed',
+          value: true
+        }
+      }
+    ]
+  },
+  "RACCOON_GIBS": {
+    title: 'GIBBED',
+    description: 'Gibbed raccoons in this lane scare away others.',
+    img: 'assets/cards/raccoon-trapper/status-card-contents8.png',
+    frame:{
+      overlayImg: 'assets/cards/raccoon-trapper/status-card-frame.png',
+      bgImg: 'assets/cards/raccoon-trapper/status-card-frame-opaque.png',
+    },
+    modifiers:[
+      {
+        type: 'boolean',
+        effect:{
+          stat: 'gibbedRaccons',
+          value: true
+        }
       }
     ]
   }
@@ -63,23 +147,36 @@ export const ALL_CARDS_MAP: any = {
 
 export const DECK_DATA: any = [
   {
-    id: 'DORITO_SNAKE',
+    id: 'RACCOON_BITE',
     idx: 0,
     count: 5
-  },
-  {
-    id: 'SPACE_BANANA',
-    idx: 1,
+  },{
+    id: 'RACCOON_LOVE',
+    idx: 0,
+    count: 4
+  },{
+    id: 'RACCOON_JUMP',
+    idx: 0,
+    count: 1
+  },{
+    id: 'RACCOON_CORPSE_BUFFET',
+    idx: 0,
     count: 2
-  },
-  {
-    id: 'BLOOD_DRAGON',
-    idx: 2,
+  },{
+    id: 'RACCOON_FEED',
+    idx: 0,
+    count: 5
+  },{
+    id: 'RACCOON_SPAWNRATE',
+    idx: 0,
+    count: 5
+  },{
+    id: 'REDRACCOON_SPAWN',
+    idx: 0,
     count: 1
-  },
-  {
-    id: 'RAIN_CAT',
-    idx: 3,
-    count: 1
+  },{
+    id: 'RACCOON_GIBS',
+    idx: 0,
+    count: 2
   }
 ];

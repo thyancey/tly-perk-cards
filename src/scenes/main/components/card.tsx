@@ -6,47 +6,23 @@ import { CardDef } from '../../../types';
 import { augmentStats } from '../slice';
 import { CardDetails } from './card-details';
 
+const CARD_WIDTH = '24rem';
+const CARD_HEIGHT = '40rem';
+
 type ContainerProps = {
   isTiny?: boolean
 }
 
-export const FaceDownCard = styled.div<ContainerProps>`
-  position:absolute;
-  width: 20rem;
-  height: 34rem;
-  left:50%;
-  top:50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  transform-origin: top;
-
-  background-color: ${getColor('blue')};
-  border-radius: 2rem;
-  border: .5rem solid ${getColor('grey')};
-  
-  ${p => p.isTiny && css`
-    transform: scale(.5, .5) translate(-50%, -50%);
-
-    &:hover{
-      transform: scale(.5, .5) translate(-50%, -50%);
-    }
-  `}
-`
-
 export const Container = styled.div<ContainerProps>`
   position:absolute;
-  width: 20rem;
-  height: 34rem;
+  width: ${CARD_WIDTH};
+  height: ${CARD_HEIGHT};
   left:50%;
   top:50%;
   transform: translate(-50%, -50%);
   cursor: pointer;
   transform-origin: top;
 
-  background-color: ${getColor('white')};
-  border-radius: 2rem;
-  border: .5rem solid ${getColor('grey')};
-  
   &:hover{
     transform: scale(1.3, 1.3) rotate(-0.005turn) translate(-50%, -50%);
     transition: transform .2s;
@@ -64,6 +40,7 @@ export const ImageContainer = styled.div`
   position:relative;
   height:45%;
   width:100%;
+  padding:1rem;
 `
 export const TitleContainer = styled.div`
   position:relative;
@@ -77,12 +54,15 @@ export const TitleContainer = styled.div`
     width:100%;
     top:50%;
     transform: translateY(-50%);
-    background-color:black;
     padding: .5rem;
+    z-index:2;
+
 
     >p{
-      font-size: 1.5rem;
+      font-size: 2rem;
       text-align:center;
+      font-weight: bold;
+      color: ${getColor('black')};
     }
   }
 `
@@ -91,28 +71,36 @@ export const DescriptionContainer = styled.div`
   width:100%;
   padding:1rem 1rem;
 `
-type CardImageProps = {
-  url: string
+interface CardImageProps {
+  url: string;
 }
-
 export const CardImage = styled.div<CardImageProps>`
   width:100%;
   height:100%;
   background: url(${p => p.url}) no-repeat center;
   background-size:cover;
-  
-  border-radius: 2rem 2rem 0 0;
 `
 
-export const CardFrame = styled.div`
-  border-radius: 1rem;
-  background-color: ${getColor('white')};
+export const FrameOverlay = styled.div<CardImageProps>`
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index:1;
+  background: url(${p => p.url}) no-repeat center;
+  background-size:cover;
+`
+
+export const FrameBg = styled.div<CardImageProps>`
   position:absolute;
   top:0;
   right:0;
   bottom:0;
   left:0;
   z-index:-1;
+  background: url(${p => p.url}) no-repeat center;
+  background-size:cover;
 `
 
 type Props = {
@@ -121,7 +109,7 @@ type Props = {
   isFaceDown?: boolean
 }
 
-export function Card({ cardData, offsetIdx, isFaceDown }: Props) {
+export function Card({ cardData, offsetIdx }: Props) {
   const dispatch = useAppDispatch();
   const style = offsetIdx !== undefined ? { left: offsetIdx * 5, top: offsetIdx * 5 } : {};
 
@@ -131,14 +119,9 @@ export function Card({ cardData, offsetIdx, isFaceDown }: Props) {
     }
   }
 
-  if(isFaceDown){
-    return (
-      <FaceDownCard style={style} isTiny={offsetIdx !== undefined}/>
-    )
-  }
-
   return (
     <Container style={style} isTiny={offsetIdx !== undefined} onClick={onCardClick}>
+      <FrameOverlay url={cardData.frame.overlayImg}/>
       <ImageContainer>
         {cardData.img && <CardImage url={cardData.img}></CardImage>}
       </ImageContainer>
@@ -153,7 +136,7 @@ export function Card({ cardData, offsetIdx, isFaceDown }: Props) {
           modifiers={cardData.modifiers}
         />
       </DescriptionContainer>
-      <CardFrame />
+      <FrameBg url={cardData.frame.bgImg}/>
     </Container>
   );
 }

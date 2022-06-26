@@ -9,31 +9,50 @@
   * 
   * inactive: not applicable here?
   * */
-export type ModifierType = 'health' | 'damage';
+
  
+export type CardFrame = {
+  overlayImg: string;
+  bgImg: string;
+}
+
  /** A basic card 
   *
   *
   * */
 export type CardDef = {
-  title: string,
-  description: string,
-  img?: string,
-  modifiers: CardModifier[]
+  title: string;
+  description: string;
+  img?: string;
+  frame: CardFrame;
+  modifiers: CardModifier[];
 }
 
 export type CardStatus = {
-  id: string,
-  deckIdx: number,
-  dealt: boolean,
-  active: boolean
+  id: string;
+  deckIdx: number;
+  dealt: boolean;
+  active: boolean;
 }
 
+export type ModifierType = 'add' | 'boolean';
 export type CardModifier = {
-  type: ModifierType,
-  value: number
+  type: ModifierType;
+  effect: CardBooleanStat | CardValueStat;
+}
+
+export type CardValueStat = {
+  type: 'value';
+  stat: string;
+  value: number;
+}
+
+export type CardBooleanStat = {
+  type: 'boolean';
+  stat: string;
+  value: boolean;
 }
 
 export type GameStats = {
-  [key: string]: CardModifier
+  [key: string]: CardValueStat | CardBooleanStat;
 }

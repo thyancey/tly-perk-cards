@@ -14,14 +14,13 @@ export const Container = styled.div`
 
 export function GameStats() {
   const gameStats = useAppSelector(selectGameStats);
-  console.log('gameStats', gameStats);
   if(!gameStats) return null;
 
   return (
     <Container>
       {
         gameStats.map(gs => (
-          <p key={gs.type}>{`${gs.type}: ${gs.value}`}</p>
+          <p key={gs.stat}>{`${gs.stat}: ${gs.value}`}</p>
         ))
       }
     </Container>

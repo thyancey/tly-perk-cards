@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Card } from './card';
 import { CardDef } from '../../../types';
+import { CardBack } from './card-back';
 
 export const Container = styled.div`
   position:relative;
@@ -15,9 +16,15 @@ type Props = {
 export function CardPile({ cards, isFaceDown }: Props) {
   return (
     <Container>
-      { cards.map((cardDef:CardDef, idx: number) => (
-        <Card offsetIdx={idx} key={idx} cardData={cardDef} isFaceDown={isFaceDown}/>
-      )) }
+      { 
+        cards.map((cardDef:CardDef, idx: number) => {
+          return isFaceDown ? (
+            <CardBack key={idx} offsetIdx={idx} />
+          ) : (
+            <Card key={idx} offsetIdx={idx} cardData={cardDef} />
+          );
+        })
+      }
     </Container>
   );
 }
