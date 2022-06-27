@@ -9,7 +9,7 @@ interface LaneBoxProps {
 export const Container = styled.div<LaneBoxProps>`
   border: .25rem dashed ${getColor('white')};
   display:inline-block;
-  height:100%;
+  height:85%;
   width:33%;
 
   ${p => p.selectionActive && css`

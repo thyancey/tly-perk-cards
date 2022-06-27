@@ -1,9 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 import { Card } from './components/card';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { augmentStats, chooseCard, dealCards, initCards, selectDealtHand, selectDiscardPile, selectDrawPile } from './slice';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CardDef } from '../../types';
 import { CardPile } from './components/card-pile';
 import { GameStats } from './components/gamestats';
@@ -21,8 +21,30 @@ export const Container = styled.div`
   padding-top:10rem;
   z-index:1;
 `
+interface ModalProps {
+  isLaneMode?: boolean;
+}
+export const LaneModeCover = styled.div<ModalProps>`
+  opacity:0;
+  pointer-events:none;
+  
+  display:block;
+  position:fixed;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index:1;
+  ${p => p.isLaneMode && css`
+    pointer-events:all;
 
-export const Modal = styled.div`
+    background-color: ${getColor('black')};
+    opacity: .8;
+    transition: opacity .2s ease-out;
+  `}
+`
+
+export const Modal = styled.div<ModalProps>`
   width:80%;
   height:80%;
   position:absolute;
@@ -30,6 +52,11 @@ export const Modal = styled.div`
   top:10%;
   border: .5rem solid ${getColor('grey_dark')};
   background-color: ${getColor('brown_dark')};
+
+  ${p => p.isLaneMode && css`
+    border: .5rem solid ${getColor('grey_dark')};
+    background-color: ${getColor('black')};
+  `}
 
   border-radius: 1rem;
 `
@@ -144,6 +171,8 @@ export function Main() {
     }
   }
 
+  const isLaneMode = useMemo(() => heldCardIdx > -1, [ heldCardIdx ]);
+
   return (
     <Container>
       <GameStats />
@@ -153,7 +182,7 @@ export function Main() {
       <DiscardPile>
         <CardPile cards={discardPile} />
       </DiscardPile>
-      <Modal>
+      <Modal isLaneMode={isLaneMode}>
         <Titletext>
           <h2>{'CHOOSE SOME CARDS'}</h2>
         </Titletext>
@@ -165,10 +194,11 @@ export function Main() {
           )) }
         </CardContainer>
         <DetailContainer><p>{
-          heldCardIdx > -1 ? 'SELECT A LANE' : ''
+          isLaneMode ? 'SELECT A LANE' : ''
         }</p></DetailContainer>
+        <LaneModeCover isLaneMode={isLaneMode} />
         <LaneContainer>
-          <LaneZones selectionActive={heldCardIdx > -1} onLaneSelected={onLaneSelected} />
+          <LaneZones selectionActive={isLaneMode} onLaneSelected={onLaneSelected} />
         </LaneContainer>
       </Modal>
       <DealButton onClick={onDealButton}>{'DEAL'}</DealButton>

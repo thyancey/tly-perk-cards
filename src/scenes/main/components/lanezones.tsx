@@ -8,6 +8,12 @@ export const Container = styled.div`
   position:relative;
   width:100%;
   height:100%;
+  z-index:2;
+`
+
+export const Details = styled.div`
+  height:15%;
+  width:100%;
 `
 interface Props {
   selectionActive?: boolean;
@@ -21,6 +27,7 @@ export function LaneZones({ selectionActive, onLaneSelected }: Props) {
   
   return (
     <Container>
+      <Details><p>{'SELECT A LANE'}</p></Details>
       <LaneBox 
         selectionActive={selectionActive}
         onLaneSelected={onLaneSelected}
