@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CardBooleanStat, CardDef, CardModifier, CardStatus, CardValueStat, GameStats } from '../../types';
+import { CardBooleanStat, CardDef, CardDefMap, CardModifier, CardStatus, CardValueStat, GameStats, RawCardDef, RawCardModifier } from '../../types';
 import { ALL_CARDS_MAP, DECK_DATA } from '../../app/data/data';
 
 export interface DeckState {
@@ -14,6 +14,31 @@ const initialState: DeckState = {
   hand: [],
   gameStats: {}
 };
+
+const parseRawModifiers = (rawModifiers: RawCardModifier[]) => {
+  return rawModifiers.map((m: RawCardModifier) => ({
+    type: m.type,
+    effect:{
+      stat: m.stat,
+      value: m.value
+    }
+  } as CardModifier))
+}
+
+
+const PARSED_CARDS_MAP = (() => {
+  const retMap = {} as CardDefMap;
+  Object.keys(ALL_CARDS_MAP).forEach(cardKey => {
+    const card = ALL_CARDS_MAP[cardKey];
+    retMap[cardKey] = {
+      ...card,
+      modifiers: parseRawModifiers(card.modifiers)
+    }
+  });
+
+  return retMap;
+})();
+
 
 export const deckSlice = createSlice({
   name: 'deck',
@@ -98,7 +123,7 @@ export const getGameStats = (state: RootState) => state.data.gameStats;
 
 export const getCardData = (cardStatus: CardStatus, deckIdx: number) => {
   return { 
-    ...ALL_CARDS_MAP[cardStatus.id],
+    ...PARSED_CARDS_MAP[cardStatus.id],
     deckIdx: deckIdx
   };
 };
@@ -175,7 +200,7 @@ export const createDeck = () => {
   let allCards = [];
   for(let i = 0; i < DECK_DATA.length; i++){
     const cardInfo = DECK_DATA[i];
-    if(ALL_CARDS_MAP[cardInfo.id]){
+    if(PARSED_CARDS_MAP[cardInfo.id]){
       for(let j = 0; j < cardInfo.count; j++){
         allCards.push({
           id: cardInfo.id,

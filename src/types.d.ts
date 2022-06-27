@@ -44,6 +44,22 @@ export type CardModifier = {
   effect: CardBooleanStat | CardValueStat;
 }
 
+export type RawCardDef = {
+  title: string;
+  description: string;
+  img?: string;
+  frame: CardFrame;
+  modifiers: RawCardModifier[];
+  deckIdx?: number;
+}
+
+
+export type RawCardModifier = {
+  type: ModifierType;
+  stat: string;
+  value: number | boolean;
+}
+
 export type CardValueStat = {
   type: 'value';
   stat: string;
@@ -58,4 +74,8 @@ export type CardBooleanStat = {
 
 export type GameStats = {
   [key: string]: CardValueStat | CardBooleanStat;
+}
+
+export type CardDefMap = {
+  [key: string]: CardDef
 }

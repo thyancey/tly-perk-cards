@@ -10,10 +10,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'add',
-        effect:{
-          stat: 'biteDamage',
-          value: 2
-        }
+        stat: 'biteDamage',
+        value: 2
       }
     ]
   },
@@ -28,10 +26,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'add',
-        effect:{
-          stat: 'loveDuration',
-          value: 1
-        }
+        stat: 'loveDuration',
+        value: 1
       }
     ]
   },
@@ -46,10 +42,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'boolean',
-        effect:{
-          stat: 'canJump',
-          value: true
-        }
+        stat: 'canJump',
+        value: true
       }
     ]
   },
@@ -64,10 +58,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'boolean',
-        effect:{
-          stat: 'corpseBuffet',
-          value: true
-        }
+        stat: 'corpseBuffet',
+        value: true
       }
     ]
   },
@@ -82,10 +74,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'add',
-        effect:{
-          stat: 'feedSpeed',
-          value: .2
-        }
+        stat: 'feedSpeed',
+        value: .2
       }
     ]
   },
@@ -100,10 +90,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'add',
-        effect:{
-          stat: 'spawnRate',
-          value: .3
-        }
+        stat: 'spawnRate',
+        value: .3
       }
     ]
   },
@@ -118,10 +106,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'boolean',
-        effect:{
-          stat: 'feedSpeed',
-          value: true
-        }
+        stat: 'feedSpeed',
+        value: true
       }
     ]
   },
@@ -136,10 +122,8 @@ export const ALL_CARDS_MAP: any = {
     modifiers:[
       {
         type: 'boolean',
-        effect:{
-          stat: 'gibbedRaccons',
-          value: true
-        }
+        stat: 'gibbedRaccons',
+        value: true
       }
     ]
   }
