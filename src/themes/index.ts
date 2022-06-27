@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle, css } from "styled-components"
 
 export default createGlobalStyle`
   *{
@@ -48,15 +48,14 @@ export default createGlobalStyle`
   }
 `
 
-/*
-export const mixinFontFamily = (style) => {
+type FontType = 'display' | 'details' | undefined;
+export const mixinFontFamily = (style: FontType) => {
   switch(style){
-    case 'details' : return css`font-family: 'Roboto', sans-serif`;
     case 'display': return css`font-family: 'Bevan', cursive`;
-    default: return css`font-family: 'Roboto', sans-serif`;
+    default: return css`font-family: 'Cabin', sans-serif`;
   }
 }
-*/
+
 export const listColors = () => {
   return Object.keys(store.colors);
 }
@@ -73,6 +72,9 @@ export const getShadow = (shadowId: tShadow) => {
 export const getBreakpoint = (breakpointId: tBreakpoint) => {
   return store.breakpoints[breakpointId] as CssString;
 }
+
+
+
 
 type CssString = string;
 
@@ -118,3 +120,6 @@ export const store: ThemeStore = {
   shadows: shadows,
   breakpoints: breakpoints
 }
+
+export const CARD_WIDTH = '18rem';
+export const CARD_HEIGHT = '30rem';

@@ -1,28 +1,38 @@
 import styled from 'styled-components';
 import { Card } from './card';
-import { CardDef } from '../../../types';
+import { CardDef, CardScaleDef } from '../../../types';
 import { CardBack } from './card-back';
 
 export const Container = styled.div`
   position:relative;
-  margin-top:10rem;
 `
 
 type Props = {
   cards: CardDef[];
   isFaceDown?: boolean;
   stackType?: string;
+  onClickCard?: Function;
+  isDisabled?: boolean;
 }
 
-export function CardPile({ cards, isFaceDown }: Props) {
+export function CardPile({ cards, isFaceDown, onClickCard, isDisabled }: Props) {
+  const cardSize = {
+    normal: [ .5, .5 ],
+    zoom: [ .5, .5 ]
+  } as CardScaleDef;
+
+  const onClickCardBack = () => {
+    if(!isDisabled && onClickCard) onClickCard();
+  }
+
   return (
     <Container>
       { 
         cards.map((cardDef:CardDef, idx: number) => {
           return isFaceDown ? (
-            <CardBack key={idx} offsetIdx={idx} />
+            <CardBack key={idx} offsetIdx={idx} size={cardSize} isDisabled={isDisabled} onClickCard={onClickCardBack}/>
           ) : (
-            <Card key={idx} cardIdx={-1} offsetIdx={idx} cardData={cardDef} />
+            <Card key={idx} offsetIdx={idx} cardData={cardDef} size={cardSize} onClickCard={onClickCard}/>
           );
         })
       }

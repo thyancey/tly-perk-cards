@@ -1,15 +1,15 @@
 import styled, { css } from 'styled-components';
-import { getColor } from '../../themes';
+import { CARD_HEIGHT, CARD_WIDTH, getColor } from '../../themes';
 import { Card } from './components/card';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { augmentStats, chooseCard, dealCards, initCards, selectDealtHand, selectDiscardPile, selectDrawPile } from './slice';
 import { useEffect, useMemo, useState } from 'react';
-import { CardDef } from '../../types';
+import { CardDef, CardScaleDef } from '../../types';
 import { CardPile } from './components/card-pile';
 import { GameStats } from './components/gamestats';
 import { LaneZones } from './components/lanezones';
 
-export const Container = styled.div`
+const Container = styled.div`
   position:absolute;
   left:0;
   top:0;
@@ -24,7 +24,7 @@ export const Container = styled.div`
 interface ModalProps {
   isLaneMode?: boolean;
 }
-export const LaneModeCover = styled.div<ModalProps>`
+const LaneModeCover = styled.div<ModalProps>`
   opacity:0;
   pointer-events:none;
   
@@ -44,7 +44,7 @@ export const LaneModeCover = styled.div<ModalProps>`
   `}
 `
 
-export const Modal = styled.div<ModalProps>`
+const Modal = styled.div<ModalProps>`
   width:80%;
   height:80%;
   position:absolute;
@@ -60,81 +60,86 @@ export const Modal = styled.div<ModalProps>`
 
   border-radius: 1rem;
 `
+const CardContainer = styled.div`
+  width:40%;
+  height:75%;
 
-export const Titletext = styled.div`
-  height:5%;
-  width:100%;
-  text-align:center;
-
-  color: ${getColor('brown_light')}
+  z-index:1;
 `
-export const CardContainer = styled.div`
-  width:100%;
-  height:60%;
-`
-export const DetailContainer = styled.div`
-  height:5%;
+const DetailContainer = styled.div`
+  height:10%;
   width:100%;
   text-align:center;
 `
-export const LaneContainer = styled.div`
-  height:30%;
-  width:100%;
-  text-align:center;
-`
-
-export const DealButton = styled.button`
+const LaneContainer = styled.div`
   position:absolute;
-  bottom:2rem;
-  width: 80%;
-  left: 10%;
-  background: none;
-  border: none;
-
-  padding: 1rem 2rem;
-
-  background-color: ${getColor('green')};
-  color: ${getColor('brown_light')};
-  border: .5rem solid ${getColor('grey_dark')};
-  font-weight: bold;
-  font-size: 3rem;
-
-  border-radius: 1rem;
-
-  cursor: pointer;
-  &:hover{
-    background-color: ${getColor('green_light')};
-    color: ${getColor('brown_dark')};
-  }
-  &:active{
-    background-color: ${getColor('green')};
-  }
+  right:0;
+  top:0;
+  height:90%;
+  width:60%;
+  text-align:center;
 `
-export const CardWrapper = styled.div`
+
+type CardWrapperProps = {
+  size: CardScaleDef;
+}
+const CardWrapper = styled.div<CardWrapperProps>`
   display: inline-block;
-  width:33%;
-  height: 100%;
+  width: 50%;
+  height: 83%;
+
+  width: ${CARD_WIDTH};
+  height: ${CARD_HEIGHT};
+  
+  transform: scale(${p => p.size.normal[0]}, ${p => p.size.normal[1]});
 
   position:relative;
 
   padding: 1rem;
-`
-export const DrawPile = styled.div`
-  position: absolute;
-  left:0;
-  width:10rem;
-  height:20rem;
-  z-index:1;
-`
-export const DiscardPile = styled.div`
-  position: absolute;
+  margin-bottom:-5rem;
 
-  right:5rem;
-  width:10rem;
-  height:20rem;
-  z-index:1;
+  &:hover{
+    z-index:1;
+  }
 `
 
+const CardStacks = styled.div`
+  width:40%;
+  height:15%;
+
+  >div{
+    padding:2rem;
+    display:inline-block;
+    vertical-align: bottom;
+    width:50%;
+  }
+`
+const DrawPile = styled.div`
+  width:10rem;
+  height:20rem;
+`
+const DiscardPile = styled.div`
+  width:10rem;
+  height:20rem;
+`
+const Header = styled.div`
+  height:10%;
+  width:60%;
+  margin-left:40%;
+  text-align:center;
+
+  color: ${getColor('brown_light')};
+
+  >h2{
+    position:fixed;
+    z-index:3;
+  }
+`
+const Body = styled.div`
+  height:90%;
+  width:100%;
+  position:relative;
+`
 
 export function Main() {
   const dispatch = useAppDispatch();
@@ -173,35 +178,48 @@ export function Main() {
 
   const isLaneMode = useMemo(() => heldCardIdx > -1, [ heldCardIdx ]);
 
+
+  const tableCardSize = {
+    normal: [ 0.9, 0.9 ],
+    zoom: [ 1.3, 1.3 ]
+  } as CardScaleDef;
+
   return (
     <Container>
       <GameStats />
-      <DrawPile>
-        <CardPile cards={drawPile} isFaceDown={true} />
-      </DrawPile>
-      <DiscardPile>
-        <CardPile cards={discardPile} />
-      </DiscardPile>
       <Modal isLaneMode={isLaneMode}>
-        <Titletext>
-          <h2>{'CHOOSE SOME CARDS'}</h2>
-        </Titletext>
-        <CardContainer>
-          { dealtHand.map((cardDef:CardDef, idx: number) => (
-            <CardWrapper key={idx}>
-              <Card cardIdx={idx} cardData={cardDef} onCardSelected={onCardSelected} />
-            </CardWrapper>
-          )) }
-        </CardContainer>
-        <DetailContainer><p>{
-          isLaneMode ? 'SELECT A LANE' : ''
-        }</p></DetailContainer>
-        <LaneModeCover isLaneMode={isLaneMode} />
-        <LaneContainer>
-          <LaneZones selectionActive={isLaneMode} onLaneSelected={onLaneSelected} />
-        </LaneContainer>
+        <Header>
+          {isLaneMode ? (
+            <h2>{'SELECT A LANE'}</h2>
+          ):(
+            <h2>{'CHOOSE SOME CARDS'}</h2>
+          )}
+        </Header>
+        <Body>
+          <CardStacks>
+            <DrawPile>
+              <CardPile cards={drawPile} isFaceDown={true} onClickCard={onDealButton} isDisabled={dealtHand.length > 0}/>
+            </DrawPile>
+            <DiscardPile>
+              <CardPile cards={discardPile} />
+            </DiscardPile>
+          </CardStacks>
+          <CardContainer>
+            { dealtHand.map((cardDef:CardDef, idx: number) => (
+              <CardWrapper key={idx} size={tableCardSize}>
+                <Card cardIdx={idx} cardData={cardDef} onCardSelected={onCardSelected} size={tableCardSize} />
+              </CardWrapper>
+            )) }
+          </CardContainer>
+          <DetailContainer><p>{
+            'Some details can go here?'
+          }</p></DetailContainer>
+          <LaneModeCover isLaneMode={isLaneMode} />
+          <LaneContainer>
+            <LaneZones selectionActive={isLaneMode} onLaneSelected={onLaneSelected} />
+          </LaneContainer>
+        </Body>
       </Modal>
-      <DealButton onClick={onDealButton}>{'DEAL'}</DealButton>
     </Container>
   );
 }

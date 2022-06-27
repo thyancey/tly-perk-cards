@@ -1,13 +1,11 @@
 import styled, { css } from 'styled-components';
-import { getColor } from '../../../themes';
-import { CardDef } from '../../../types';
+import { CARD_HEIGHT, CARD_WIDTH, getColor } from '../../../themes';
+import { CardDef, CardScaleDef, StackType } from '../../../types';
 import { CardDetails } from './card-details';
 
-const CARD_WIDTH = '24rem';
-const CARD_HEIGHT = '40rem';
 
 type ContainerProps = {
-  isTiny?: boolean
+  size: CardScaleDef;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -17,21 +15,16 @@ export const Container = styled.div<ContainerProps>`
   left:50%;
   top:50%;
   transform: translate(-50%, -50%);
+  transform: scale(${p => p.size.normal[0]}, ${p => p.size.normal[1]}) translate(-50%, -50%);
   cursor: pointer;
   transform-origin: top;
+  z-index:1;
 
   &:hover{
-    transform: scale(1.3, 1.3) rotate(-0.005turn) translate(-50%, -50%);
+    transform: scale(${p => p.size.zoom[0]}, ${p => p.size.zoom[1]}) rotate(-0.005turn) translate(-50%, -50%);
     transition: transform .2s;
+    z-index:10;
   }
-
-  ${p => p.isTiny && css`
-    transform: scale(.5, .5) translate(-50%, -50%);
-
-    &:hover{
-      transform: scale(.5, .5) translate(-50%, -50%);
-    }
-  `}
 `
 export const ImageContainer = styled.div`
   position:relative;
@@ -56,7 +49,7 @@ export const TitleContainer = styled.div`
 
 
     >p{
-      font-size: 2rem;
+      font-size: 1.5rem;
       text-align:center;
       font-weight: bold;
       color: ${getColor('black')};
@@ -99,26 +92,43 @@ export const FrameBg = styled.div<CardImageProps>`
   background: url(${p => p.url}) no-repeat center;
   background-size:cover;
 `
-
 interface Props {
-  cardIdx: number;
+  cardIdx?: number;
   cardData: CardDef;
   offsetIdx?: number;
   isFaceDown?: boolean;
   onCardSelected?: Function;
+  size?: CardScaleDef;
+  onClickCard?: Function;
+  stackType?: StackType;
 }
 
-export function Card({ cardIdx, cardData, onCardSelected, offsetIdx }: Props) {
-  const style = offsetIdx !== undefined ? { left: offsetIdx * 2, top: offsetIdx * 4 } : {};
+export function Card({ size, cardIdx, cardData, onCardSelected, offsetIdx, stackType }: Props) {
+  let style = {};
+  if(offsetIdx !== undefined){
+    if(stackType === 'side-by-side'){
+      style = { left: offsetIdx * 100 };
+    }else{
+      style = { left: offsetIdx * 2, top: offsetIdx * 4 };
+    }
+  }
+
+  console.log('stackType', stackType)
 
   const onClick = () => {
-    if(onCardSelected){
+    if(cardIdx !== undefined && onCardSelected){
       onCardSelected(cardIdx);
     }
   }
 
+  const anySize = {
+    normal: [ 1, 1 ],
+    zoom: [ 1.3, 1.3 ],
+    ...size
+  } as CardScaleDef;
+
   return (
-    <Container style={style} isTiny={offsetIdx !== undefined} onClick={onClick}>
+    <Container size={anySize} style={style} onClick={onClick}>
       <FrameOverlay url={cardData.frame.overlayImg}/>
       <ImageContainer>
         {cardData.img && <CardImage url={cardData.img}></CardImage>}

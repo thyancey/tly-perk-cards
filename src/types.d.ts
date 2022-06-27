@@ -53,6 +53,10 @@ export type RawCardDef = {
   deckIdx?: number;
 }
 
+export type CardScaleDef = {
+  normal: [ number, number];
+  zoom: [ number, number ];
+}
 
 export type RawCardModifier = {
   type: ModifierType;
@@ -79,3 +83,5 @@ export type GameStats = {
 export type CardDefMap = {
   [key: string]: CardDef
 }
+
+export type StackType = 'side-by-side' | 'deck';

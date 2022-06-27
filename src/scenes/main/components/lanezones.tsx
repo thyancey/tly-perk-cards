@@ -12,7 +12,7 @@ export const Container = styled.div`
 `
 
 export const Details = styled.div`
-  height:15%;
+  height:10%;
   width:100%;
 `
 interface Props {
@@ -27,7 +27,6 @@ export function LaneZones({ selectionActive, onLaneSelected }: Props) {
   
   return (
     <Container>
-      <Details><p>{'SELECT A LANE'}</p></Details>
       <LaneBox 
         selectionActive={selectionActive}
         onLaneSelected={onLaneSelected}

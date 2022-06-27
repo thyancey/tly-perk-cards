@@ -3,6 +3,8 @@ import { RootState } from '../../app/store';
 import { CardBooleanStat, CardDef, CardDefMap, CardModifier, CardStatus, CardValueStat, GameStats, RawCardDef, RawCardModifier } from '../../types';
 import { ALL_CARDS_MAP, DECK_DATA } from '../../app/data/data';
 
+const CARDS_PER_DRAW = 4;
+
 export interface DeckState {
   deckStatus: CardStatus[];
   hand: number[];
@@ -182,7 +184,7 @@ export const selectLaneCards = createSelector(
 export const drawCardIndicies = (deckStatus: CardStatus[]) => {
   const dealtIndicies: number[] = [];
   let availableDeck = deckStatus.filter(cS => !cS.dealt);
-  for(let i = 0; i < 3; i++){
+  for(let i = 0; i < CARDS_PER_DRAW; i++){
     if(availableDeck.length === 0) {
       // deck is now empty.
       break;

@@ -3,11 +3,12 @@ import { getColor } from '../../../themes';
 import { CardModifier } from '../../../types';
 
 export const Container = styled.div`
-  padding: 4rem 2rem;
+  padding: 1.5rem 2rem;
 `
 
 export const CardDescription = styled.p`
   color: ${getColor('black')};
+  font-size:1.4rem;
   text-align:center;
 `
 
@@ -19,7 +20,7 @@ export const ModifierContainer = styled.ul`
 
 export const Modifier = styled.li`
   span{
-    font-size:1.3rem;
+    font-size:1.2rem;
   }
 
   span:first-child{
